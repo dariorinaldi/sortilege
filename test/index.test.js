@@ -11,7 +11,7 @@ test("sort ascending", () => {
 });
 
 test("sort descending", () => {
-  expect(sort(items, "DESC")).toEqual([
+  expect(sort(items, { sortDir: "DESC" })).toEqual([
     { name: "mario" },
     { name: "luca" },
     { name: "andrea" }
