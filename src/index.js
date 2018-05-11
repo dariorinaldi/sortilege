@@ -1,6 +1,12 @@
 import moment from "moment";
+const DEFAULTS = { sortDir: "ASC", sortField: null, throwError: false };
 
-const OPTIONS = { sortDir: "ASC", sortField: null, throwError: false };
+const getOptions = options => {
+  return {
+    ...DEFAULTS,
+    ...options
+  };
+};
 
 const getType = val => {
   const type = typeof val;
@@ -82,7 +88,8 @@ const compare = (a, b, sortDir, sortField, throwError) => {
  * @param {boolean} options.handleError - If set to true in case of error returns the array sorted by the 0th element (or field in case of objects)
  * @return {Array.<any>} - The sorted array
  */
-const sort = (items, { sortDir, sortField, throwError } = OPTIONS) => {
+const sort = (items, options) => {
+  const { sortDir, sortField, throwError } = getOptions(options);
   return items.sort((a, b) => compare(a, b, sortDir, sortField, throwError));
 };
 
