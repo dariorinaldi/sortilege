@@ -1,4 +1,12 @@
 import moment from "moment";
+const DEFAULTS = { sortDir: "ASC", sortField: null, throwError: false };
+
+const getOptions = options => {
+  return {
+    ...DEFAULTS,
+    ...options
+  };
+};
 
 const getType = val => {
   const type = typeof val;
@@ -72,14 +80,16 @@ const compare = (a, b, sortDir, sortField, throwError) => {
   return sortDir === "DESC" ? desc(itemA, itemB) : asc(itemA, itemB);
 };
 
-/** A function to sort an array in a type-aware mode 
-      /* @param {Array.<any>} items  - Array to sort. The items have to be of the same type
-      /* @param {string} sortDir  - Direction to sort to. It can be 'ASC' or 'DESC'
-      /* @param {string} sortField - In case of objects array, the field to use to sort
-      /* @param {boolean} handleError - If set to true in case of error returns the array sorted by the 0th element (or field in case of objects) 
-      /* @return {Array.<any>} - The sorted array
-      */
-const sort = (items, sortDir = "ASC", sortField = null, throwError = false) => {
+/** A function to sort an array in a type-aware mode
+ * @param {Array.<any>} items  - Array to sort. The items have to be of the same type
+ * @param {Object} options - Include options parameters to be used
+ * @param {string} options.sortDir  - Direction to sort to. It can be 'ASC' or 'DESC'
+ * @param {string} options.sortField - In case of objects array, the field to use to sort
+ * @param {boolean} options.handleError - If set to true in case of error returns the array sorted by the 0th element (or field in case of objects)
+ * @return {Array.<any>} - The sorted array
+ */
+const sort = (items, options) => {
+  const { sortDir, sortField, throwError } = getOptions(options);
   return items.sort((a, b) => compare(a, b, sortDir, sortField, throwError));
 };
 
