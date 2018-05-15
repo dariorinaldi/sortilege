@@ -5,7 +5,9 @@
   "main": "sort.js",
   "scripts": {
     "test": "jest test --watch",
-    "build": "babel src --out-dir dist"
+    "build": "babel src --out-dir dist",
+    "precommit": "npm test",
+    "prepush": "npm test"
   },
   "repository": {
     "type": "git",
@@ -24,7 +26,9 @@
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^22.4.3",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "husky": "^0.14.3",
     "jest": "^22.4.3"
   }
 }
