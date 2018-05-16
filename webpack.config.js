@@ -1,10 +1,11 @@
 const path = require("path");
 
 module.exports = {
-  entry: path.resolve(__dirname, "src", "index.js"),
+  entry: "./src/index.js",
   output: {
     filename: "sort-everything.min.js",
-    path: path.resolve(__dirname, "lib")
+    path: path.resolve(__dirname, "lib"),
+    libraryTarget: "commonjs2"
   },
   module: {
     rules: [
@@ -15,7 +16,7 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["babel-preset-env"],
-            plugins: ["transform-object-rest-spread"]
+            plugins: ["add-module-exports"]
           }
         }
       }
