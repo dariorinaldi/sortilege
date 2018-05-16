@@ -1,4 +1,4 @@
-import moment from "moment";
+import isValidISODate from "./isValidISODate";
 const DEFAULTS = { sortDir: "ASC", sortBy: null, throwError: false };
 
 const getOptions = options => {
@@ -11,9 +11,7 @@ const getOptions = options => {
 const getType = val => {
   const type = typeof val;
   if (type === "string") {
-    return moment(val, [moment.ISO_8601, moment.RFC_2822]).isValid()
-      ? "date"
-      : "string";
+    return isValidISODate(val) ? "date" : "string";
   }
   return type;
 };
@@ -45,25 +43,26 @@ const fallbacksortBy = item => {
   return sortBy;
 };
 
+const checkForDifferentTypes = (itemA, itemB) => {
+  if (
+    getType(itemA) !== getType(itemB) ||
+    Array.isArray(itemA) !== Array.isArray(itemB)
+  ) {
+    throw new Error("Different types cannot be compared");
+  }
+};
+
 const compare = (a, b, sortDir, sortBy, throwError) => {
-  //gets types
-  const typeA = getType(a.data);
-  const typeB = getType(b.data);
   //clones parameters for manipulation
   let itemA = a.data;
   let itemB = b.data;
   let sortParameter = sortBy;
 
   //if we have different types in the list, error is thrown
-  if (typeA !== typeB || Array.isArray(itemA) !== Array.isArray(itemB)) {
-    if (throwError) {
-      throw new Error("Different types cannot be compared");
-    }
-    return 0;
-  }
+  checkForDifferentTypes(itemA, itemB);
 
   //array of objects or array of arrays
-  if (typeA === "object") {
+  if (getType(itemA) === "object") {
     //fallback for missing sortParameter
     if (!sortParameter || !sortParameter.length) {
       sortParameter = fallbacksortBy(itemA);
@@ -73,18 +72,22 @@ const compare = (a, b, sortDir, sortBy, throwError) => {
     itemA = getValueByPath(sortParameter, itemA);
     itemB = getValueByPath(sortParameter, itemB);
 
+    checkForDifferentTypes(itemA, itemB);
+
     //throws error for undefined values
     if (itemA === undefined) {
-      if (throwError) {
-        throw new Error(`Specified sortBy has not been found value ${a}`);
-      }
-      return 0;
+      throw new Error(
+        `Specified sortBy (${sortBy}) has not been found on item ${JSON.stringify(
+          a.data
+        )}.`
+      );
     }
     if (itemB === undefined) {
-      if (throwError) {
-        throw new Error(`Specified sortBy has not been found in item ${b}`);
-      }
-      return 0;
+      throw new Error(
+        `Specified sortBy (${sortBy}) has not been found on item ${JSON.stringify(
+          b.data
+        )}.`
+      );
     }
   }
 
@@ -92,6 +95,15 @@ const compare = (a, b, sortDir, sortBy, throwError) => {
   return sortDir === "DESC"
     ? desc(itemA, itemB, a.id, b.id)
     : asc(itemA, itemB, a.id, b.id);
+};
+
+const execSort = (list, sortDir, sortBy, throwError) => {
+  try {
+    return list.sort((a, b) => compare(a, b, sortDir, sortBy, throwError));
+  } catch (err) {
+    if (throwError) throw err;
+    return null;
+  }
 };
 
 /** A function to sort an array in a type-aware mode
@@ -107,10 +119,23 @@ const sort = (items, options) => {
   //check if items is array
   if (!Array.isArray(items)) {
     if (throwError) {
-      throw new Error(`Items to sort must be enclosed in an array`);
-    } else {
+      throw new Error(`Items must be an array`);
+    }
+    return items;
+  }
+
+  if (sortBy && Array.isArray(sortBy)) {
+    if (sortBy.some(i => typeof i !== "string")) {
+      if (throwError) {
+        throw new Error("[sortBy] must be a string or an array of strings");
+      }
       return items;
     }
+  } else if (sortBy && typeof sortBy !== "string") {
+    if (throwError) {
+      throw new Error("[sortBy] must be a string or an array of strings");
+    }
+    return items;
   }
 
   //list is items data with a progressive id to preserve order if value is the same
@@ -118,27 +143,22 @@ const sort = (items, options) => {
     return { id: id, data: data };
   });
 
-  if (!sortBy || typeof sortBy === "string") {
-    //sorts and gets data of lists
-    list.sort((a, b) => compare(a, b, sortDir, sortBy, throwError));
-
-    return list.map(function(val) {
-      return val.data;
-    });
-  }
-  if (Array.isArray(sortBy)) {
+  let sorted;
+  if (!sortBy || !Array.isArray(sortBy)) {
+    sorted = execSort(list, sortDir, sortBy, throwError);
+  } else {
     //sorts and gets data of lists in reverse order (priority) of given sortBy array
-    sortBy.reverse().reduce((acc, curr) => {
-      return list.sort((a, b) => compare(a, b, sortDir, curr, throwError));
+    sorted = sortBy.reverse().reduce((acc, curr) => {
+      return execSort(acc, sortDir, curr, throwError);
     }, list);
-    return list.map(function(val) {
-      return val.data;
-    });
   }
 
-  if (throwError) {
-    throw new Error(`Specified sortBy must be a string or an array of strings`);
-  }
+  return sorted
+    ? sorted.map(function(val) {
+        return val.data;
+      })
+    : items;
+
   return list;
 };
 

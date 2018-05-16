@@ -5,9 +5,13 @@
   "main": "sort.js",
   "scripts": {
     "test": "jest test --watch",
-    "build": "babel src --out-dir dist",
-    "precommit": "npm test",
-    "prepush": "npm test"
+    "build": "webpack --config webpack.config.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   },
   "repository": {
     "type": "git",
@@ -19,16 +23,18 @@
     "url": "https://github.com/dariorinaldi/sort-everything/issues"
   },
   "homepage": "https://github.com/dariorinaldi/sort-everything#readme",
-  "dependencies": {
-    "moment": "^2.22.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-jest": "^22.4.3",
+    "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "husky": "^0.14.3",
-    "jest": "^22.4.3"
+    "jest": "^22.4.3",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.8.3",
+    "webpack-cli": "^2.1.3"
   }
 }

@@ -17,7 +17,6 @@ const daysInMonth = (month, year) => {
 };
 
 const isValidDate = (day, month, year) => {
-  console.log(year + "-" + month + "-" + day);
   month = parseInt(month, 10) - 1;
   return month >= 0 && month < 12 && day > 0 && day <= daysInMonth(month, year);
 };
@@ -32,7 +31,6 @@ const isValidISODate = date => {
   }
 
   const parsedDate = new Date(date);
-  console.log(parsedDate.getMonth());
   return isValidDate(
     parsedDate.getDate(),
     parsedDate.getMonth() + 1,

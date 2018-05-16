@@ -1,51 +1,199 @@
 import sort from "../src";
 
-const items = [
-  { name: { text: "luca", value: 9172 } },
-  { name: { text: "andrea", value: 346 } },
-  { name: { text: "mario", value: 346 } },
-  { name: { text: "paolo", value: 1346 } },
-  { name: { text: "andrea", value: 1246 } }
+const stringList = ["luca", "andrea", "mario", "paolo", "andrea"];
+
+const arrayList = [
+  ["luca", "andrea", "marta"],
+  ["giovanni", "marco", "fabio"],
+  ["dario", "laura", "federica"],
+  ["flavio", "roberta", "eleonora"],
+  ["elisa", "marco", "eleonora"]
 ];
 
-test("sort default values -> sortBy fallback", () => {
-  expect(sort(items)).toEqual([
-    { name: { text: "andrea", value: 346 } },
-    { name: { text: "andrea", value: 1246 } },
-    { name: { text: "luca", value: 9172 } },
-    { name: { text: "mario", value: 346 } },
-    { name: { text: "paolo", value: 1346 } }
-  ]);
+const objectList = [
+  { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+  { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } },
+  { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+  { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
+  { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } }
+];
+
+const mixedList = [
+  ["luca", "andrea", "marta"],
+  [true, "andrea", "marta"],
+  ["marco", 2, "marta"],
+  ["fabio", "andrea", "pippo"],
+  ["luca", "andrea", 0]
+];
+
+describe("sort-everything - happy path", () => {
+  it("GIVEN a list of strings WHEN sort is called without options THEN it should sort in ascending order", () => {
+    expect(sort(stringList)).toEqual([
+      "andrea",
+      "andrea",
+      "luca",
+      "mario",
+      "paolo"
+    ]);
+  });
+
+  it("GIVEN a list of strings WHEN sort is called with [sortBy] THEN it should sort in descending order", () => {
+    expect(sort(stringList, { sortDir: "DESC" })).toEqual([
+      "paolo",
+      "mario",
+      "luca",
+      "andrea",
+      "andrea"
+    ]);
+  });
+
+  it("GIVEN a list of arrays WHEN sort is called without options THEN it should sort in ascending order on the 0th field", () => {
+    expect(sort(arrayList)).toEqual([
+      ["dario", "laura", "federica"],
+      ["elisa", "marco", "eleonora"],
+      ["flavio", "roberta", "eleonora"],
+      ["giovanni", "marco", "fabio"],
+      ["luca", "andrea", "marta"]
+    ]);
+  });
+
+  it("GIVEN a list of arrays WHEN sort is called with [sortBy] THEN it should sort in ascending order by the given field", () => {
+    expect(sort(arrayList, { sortBy: "1" })).toEqual([
+      ["luca", "andrea", "marta"],
+      ["dario", "laura", "federica"],
+      ["giovanni", "marco", "fabio"],
+      ["elisa", "marco", "eleonora"],
+      ["flavio", "roberta", "eleonora"]
+    ]);
+  });
+
+  it("GIVEN a list of arrays WHEN sort is called with [sortBy] and [sortDir] = DESC THEN it should sort in descending order by the given field", () => {
+    expect(sort(arrayList, { sortDir: "DESC", sortBy: "2" })).toEqual([
+      ["luca", "andrea", "marta"],
+      ["dario", "laura", "federica"],
+      ["giovanni", "marco", "fabio"],
+      ["elisa", "marco", "eleonora"],
+      ["flavio", "roberta", "eleonora"]
+    ]);
+  });
+
+  it("GIVEN a list of objects WHEN sort is called without options THEN it should sort in ascending order by the first valuable field", () => {
+    expect(sort(objectList)).toEqual([
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } }
+    ]);
+  });
+
+  it("GIVEN a list of objects WHEN sort is called with [sortDir] = DESC THEN it should sort in descending order by the first valuable field", () => {
+    expect(sort(objectList, { sortDir: "DESC" })).toEqual([
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } }
+    ]);
+  });
+
+  it("GIVEN a list of objects WHEN sort is called with [sortBy] THEN it should sort in ascending order by given field", () => {
+    expect(sort(objectList, { sortBy: "user.birthDate" })).toEqual([
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } }
+    ]);
+  });
+
+  it("GIVEN a list of objects WHEN sort is called with [sortBy] and [sortDir] = DESC THEN it should sort in descending order by given field", () => {
+    expect(
+      sort(objectList, { sortBy: "user.birthDate", sortDir: "DESC" })
+    ).toEqual([
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } }
+    ]);
+  });
+
+  it("GIVEN a list of items WHEN sort is called with multiple [sortBy] THEN it should sort in ascending order by given fields", () => {
+    expect(sort(objectList, { sortBy: ["user.name", "user.id"] })).toEqual([
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } }
+    ]);
+  });
+
+  it("GIVEN a list of items WHEN sort is called with multiple [sortBy] and [sortDir] = DESC THEN it should sort in descending order by given fields", () => {
+    expect(
+      sort(objectList, { sortDir: "DESC", sortBy: ["user.name", "user.id"] })
+    ).toEqual([
+      { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
+      { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
+      { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } }
+    ]);
+  });
 });
 
-test("sort descending, tests default values with direction", () => {
-  expect(sort(items, { sortDir: "DESC" })).toEqual([
-    { name: { text: "paolo", value: 1346 } },
-    { name: { text: "mario", value: 346 } },
-    { name: { text: "luca", value: 9172 } },
-    { name: { text: "andrea", value: 1246 } },
-    { name: { text: "andrea", value: 346 } }
-  ]);
+describe("sort-everything - invalid sortBy", () => {
+  it("GIVEN a list of arrays WHEN is called with an invalid [sortBy] and [throwError] = false (default) THEN it should return the list as is", () => {
+    expect(sort(arrayList, { sortBy: "3" })).toEqual([
+      ["luca", "andrea", "marta"],
+      ["giovanni", "marco", "fabio"],
+      ["dario", "laura", "federica"],
+      ["flavio", "roberta", "eleonora"],
+      ["elisa", "marco", "eleonora"]
+    ]);
+  });
+
+  it("GIVEN a list of arrays WHEN is called with an invalid [sortBy] and [throwError] = true (default) THEN it should throw an Error", () => {
+    const sortWrapper = () => {
+      sort(arrayList, { sortBy: "3", throwError: true });
+    };
+
+    expect(sortWrapper).toThrowError(
+      /^Specified sortBy \(3\) has not been found on item \["luca","andrea","marta"\].$/
+    );
+  });
 });
 
-test("sort by nested value, tests iteration for sortBy", () => {
-  expect(sort(items, { sortBy: "name.value" })).toEqual([
-    { name: { text: "andrea", value: 346 } },
-    { name: { text: "mario", value: 346 } },
-    { name: { text: "andrea", value: 1246 } },
-    { name: { text: "paolo", value: 1346 } },
-    { name: { text: "luca", value: 9172 } }
-  ]);
-});
+describe("sort-everything - invalid items", () => {
+  it("GIVEN an object WHEN sort and [throwError] = false THEN it should return value as is", () => {
+    expect(sort("non-array")).toBe("non-array");
+  });
 
-test("sort by multiple nested values, tests iteration and reducer for sortBy, in descendent order", () => {
-  expect(
-    sort(items, { sortDir: "DESC", sortBy: ["name.text", "name.value"] })
-  ).toEqual([
-    { name: { text: "paolo", value: 1346 } },
-    { name: { text: "mario", value: 346 } },
-    { name: { text: "luca", value: 9172 } },
-    { name: { text: "andrea", value: 1246 } },
-    { name: { text: "andrea", value: 346 } }
-  ]);
+  it("GIVEN an object WHEN sort and [throwError] = true THEN it should throw an error", () => {
+    const sortWrapper = () => {
+      sort("non-array", { throwError: true });
+    };
+    expect(sortWrapper).toThrowError(/^Items must be an array$/);
+  });
+
+  it("GIVEN an invalid error WHEN sort and [throwError] = true THEN it should throw an error", () => {
+    const sortWrapper = () => {
+      sort(objectList, { throwError: true, sortBy: ["user.name", 3] });
+    };
+    expect(sortWrapper).toThrowError(
+      /^\[sortBy\] must be a string or an array of strings$/
+    );
+  });
+
+  it("GIVEN a list of arrays WHEN is called with an invalid list and [throwError] = true THEN it should throw an Error", () => {
+    let sorted;
+    const sortWrapper = () => {
+      sorted = sort(mixedList, { throwError: true });
+    };
+    expect(sortWrapper).toThrowError(/^Different types cannot be compared$/);
+  });
+
+  it("GIVEN a list of arrays WHEN is called with an invalid list and [throwError] = false THEN it should return the list as is", () => {
+    expect(sort(mixedList)).toEqual(mixedList);
+  });
 });
