@@ -1,13 +1,12 @@
 const path = require("path");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
-  entry: path.resolve(__dirname, "src", "index.js"),
+  entry: "./src/index.js",
   output: {
     filename: "sort-everything.min.js",
-    path: path.resolve(__dirname, "bin")
+    path: path.resolve(__dirname, "lib"),
+    libraryTarget: "commonjs2"
   },
-  devtool: "source-map",
   module: {
     rules: [
       {
@@ -16,11 +15,11 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["babel-preset-env"]
+            presets: ["babel-preset-env"],
+            plugins: ["add-module-exports"]
           }
         }
       }
     ]
-  },
-  plugins: [new UglifyJSPlugin({ sourceMap: true })]
+  }
 };
