@@ -10,8 +10,11 @@
 
 ### Installation
 
-  **npm:**
-`npm i --save sort-any-aray`
+**npm:**
+`npm i -s sortilege`
+
+**yarn:**
+`yarn add sortilege`
 
 **cdn:**
 `work in progress`
@@ -23,32 +26,36 @@
 All you need to do is importing `sortilege` and apply the function to any array of **consistent data**.
 
 Further options are allowed.
-  
-
-    import _sort from 'sortilege';
-    const mySimpleArray=["pineapple","apple","pen","penpineapple"];
-    return _sort(mySimpleArray);
-    -> ["apple","pen","penpinapple","pinapple"];
-
-	/*--------------------*/
-
-    const myObjectsArray = [
-     { name: { text: "luke", value: 9172 } },
-     { name: { text: "andrew", value: 346 } },
-     { name: { text: "mary", value: 346 } },
-     { name: { text: "andrew", value: 1246 } }
-    ];
+  
+```es6
+import sort from "sortilege";
     
-    return _sort(myObjectsArray,{sortDir:'ASC',throwError:true});
-    -> [
-     { name: { text: "andrew", value: 346 } },
-     { name: { text: "andrew", value: 1246 } },
-     { name: { text: "luke", value: 9172 } },
-     { name: { text: "mary", value: 346 } },
-    ];
+const simpleArray = ["pineapple","apple","pen","penpineapple"];
+    
+return sort(mySimpleArray); 
+// ["apple","pen","penpinapple","pinapple"];
+```
 
-  
-  ---
+You can sort an array of objects. If no options are specified, sortilege uses 
+the first non-object field it finds traversing the tree.
+	
+```es6
+const objectsArray = [
+	{ name: { text: "luke", value: 9172 } },
+	{ name: { text: "andrew", value: 346 } },
+	{ name: { text: "mary", value: 346 } },
+	{ name: { text: "andrew", value: 1246 } }
+];
+    
+return sort(objectsArray);
+// sortilege used the field [text] to sort
+// [
+//    { name: { text: "andrew", value: 346 } },
+//    { name: { text: "andrew", value: 1246 } },
+//    { name: { text: "luke", value: 9172 } },
+//    { name: { text: "mary", value: 346 } },
+// ];
+```
 
 ### Options
 
