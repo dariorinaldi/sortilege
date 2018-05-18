@@ -1,14 +1,13 @@
-
 # sortilege
 
-## Sort arrays containing any data type by given field(s)!
+Sort arrays containing any data type by given field(s)!
 
 [![GitHub version](https://badge.fury.io/gh/dariorinaldi%2Fsort-everything.svg)](https://badge.fury.io/gh/dariorinaldi%2Fsort-everything)
 [![NPM version](https://badge.fury.io/js/sortilege.svg)](http://badge.fury.io/js/sortilege)
 [![Coverage Status](https://coveralls.io/repos/dariorinaldi/sort-everything/badge.svg)](https://coveralls.io/r/boennemann/badges)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
-### Installation
+## Installation
 
 **npm:**
 `npm i -s sortilege`
@@ -16,83 +15,203 @@
 **yarn:**
 `yarn add sortilege`
 
-**cdn:**
-`work in progress`
+**unpkg:**
+`https://unpkg.com/sortilege`
 
-  
----
-### Usage
+## Usage
 
-All you need to do is importing `sortilege` and apply the function to any array of **consistent data**.
+_Sortilege_ is a function which accepts an `array` to sort and an optional `options` object and returns a sorted array.
 
-Further options are allowed.
-  
-```es6
-import sort from "sortilege";
-    
-const simpleArray = ["pineapple","apple","pen","penpineapple"];
-    
-return sort(mySimpleArray); 
-// ["apple","pen","penpinapple","pinapple"];
+```javascript
+const sorted = sortilege(array[, options])
 ```
 
-You can sort an array of objects. If no options are specified, sortilege uses 
+The most basic example is about sorting a simple array of strings. It sorts in ascending order by default:
+
+```javascript
+import sort from "sortilege";
+
+const simpleArray = ["pineapple", "apple", "banana", "pear"];
+
+return sort(simpleArray);
+// ["apple","banana","pear","pinapple"];
+```
+
+If an array of objects is passed in, when no options are specified, sortilege uses
 the first non-object field it finds traversing the tree.
-	
-```es6
-const objectsArray = [
-	{ name: { text: "luke", value: 9172 } },
-	{ name: { text: "andrew", value: 346 } },
-	{ name: { text: "mary", value: 346 } },
-	{ name: { text: "andrew", value: 1246 } }
+
+```javascript
+const users = [
+  { user: { name: "luke", age: 32 } },
+  { user: { name: "andrew", age: 40 } },
+  { user: { name: "mary", age: 43 } },
+  { user: { name: "andrew", age: 29 } }
 ];
-    
-return sort(objectsArray);
-// sortilege used the field [text] to sort
+
+return sort(users);
+// the field [name] is used to sort
 // [
-//    { name: { text: "andrew", value: 346 } },
-//    { name: { text: "andrew", value: 1246 } },
-//    { name: { text: "luke", value: 9172 } },
-//    { name: { text: "mary", value: 346 } },
+// { user: { name: "andrew", age: 43 } },
+// { user: { name: "andrew", age: 29 } },
+// { user: { name: "luke", age: 32 } },
+// { user: { name: "mary", age: 43 } },
 // ];
 ```
 
-### Options
+If an array of arrays is passed in, sortilege uses the 0th element of the children arrays to sort by.
 
-`sortilege` accepts an object of options to set direction of sorting, sorting parameter(s) and handling of errors.
+```javascript
+const users = [
+  ["Mark", "Ross", 30, "Student"],
+  ["Paul", "White", 29, "Student"],
+  ["Jessica", "Bishop", 32, "Artist"]
+];
 
-    import _sort from 'sortilege';
-	const myArray = [
-	 { name: { text: "luke", value: 9172 } },
-	 { name: { text: "andrew", value: 346 } },
-	 { name: { text: "mary", value: 346 } },
-	 { name: { text: "andrew", value: 1246 } }
-	];
+return sort(users);
+// the element with index 0 is used to sort by
+// [
+// ["Jessica", "Bishop", 32, "Artist"]
+// ["Mark", "Ross", 30, "Student"],
+// ["Paul", "White", 29, "Student"],
+// ]
+```
 
-	return _sort(myArray,{sortDir:'DESC', sortBy:['name.text','name.value'],throwError:true});
-    -> [
-	 { name: { text: "mary", value: 346 } },
-	 { name: { text: "luke", value: 9172 } },
-	 { name: { text: "andrew", value: 1246 } },
-	 { name: { text: "andrew", value: 346 } },
-	];
+## Options
 
-In the previous example our dataset is sorted in descending order, by text and value, and in case of errors in sorting (i.e. specified fields not found in dataset) throws an error in console.
+The `options` object is _optional_ and has the following structure:
 
----
-### Options formatting
+```javascript
+const options = {
+  sortDir: string, // specifies the direction of sort. Possible values are ASC (default) and DESC
+  sortBy: string | array[string], // specifies the field(s) to sort by. See above for more details.
+  throwError: bool // specifies whether or not an error has to be thrown in case of issues
+};
+```
 
--  `sortDir` : `string` -> defines direction of sorting
-	- format: `"ASC"`,`"DESC"`
-	- default value: `"ASC"`
-	- fallback: `"ASC"`
+### sortDir
 
-  
--  `sortBy` : `string` or `array of strings` (not used for array of numbers, array of strings). -> defines for which value(s) the array has to be sorted, first is most important, last least important
-	- format: nested values are dot separated (e.g. `sortBy:["value.0.text","value.data"]`)
-	- default value: `null`
-	- fallback: first primitive (string or number) found in dataset descending the data tree
+With `sortDir` you can specify the sort direction. It accepts both `"ASC"` and `"DESC"`. By default it is set to `"ASC"`.
 
+```javascript
+const users = [
+  { user: { name: "luke", age: 32 } },
+  { user: { name: "andrew", age: 40 } },
+  { user: { name: "mary", age: 43 } },
+  { user: { name: "andrew", age: 29 } }
+];
 
--  `throwError` : `boolean` -> defines if we want to throw errors in console
-	- default value: `false`
+return sort(users, { sortDir: "DESC" });
+// the field [name] is used to sort
+// [
+// { user: { name: "luke", age: 32 } },
+// { user: { name: "mary", age: 43 } },
+// { user: { name: "andrew", age: 40 } },
+// { user: { name: "andrew", age: 29 } }
+// ];
+```
+
+In the previous example our array is sorted, in descending order, by the first valuable field which is `name`.
+
+### sortBy
+
+Specifies the field(s) the array is sorted by.
+
+**It must refer to _non-object_ and _non-array_ field. It can have the following formats.**
+
+**Single field**
+It finds the field specified inside the object and sort by it.
+
+```javascript
+sortBy: "field";
+```
+
+Example:
+
+```javascript
+const users = [
+  { id: 1, name: "luke", age: 32 },
+  { id: 2, name: "andrew", age: 40 },
+  { id: 3, name: "mary", age: 43 },
+  { id: 4, name: "andrew", age: 29 }
+];
+
+return sort(users, { sortBy: "age", sortDir: "DESC" });
+// [
+// { id: 3, name: "mary", age: 43 },
+// { id: 2, name: "andrew", age: 40 },
+// { id: 1, name: "luke", age: 32 },
+// { id: 4, name: "andrew", age: 29 },
+// ]
+```
+
+It is possible to use `.` to access fields on nested objects. In this case just the last field in the path has to be a _non-object_ and _non-array_ type. It is recursive so there is no limit to the nesting levels.
+
+```javascript
+sortBy: "field.subfield";
+```
+
+Example:
+
+```javascript
+const users = [
+  {
+    id: 1,
+    name: "luke",
+    address: { city: { name: "Manchester", zipCode: "" } }
+  },
+  { id: 2, name: "andrew", address: { city: { name: "Berlin", zipCode: "" } } },
+  { id: 3, name: "mary", address: { city: { name: "Paris", zipCode: "" } } },
+  {
+    id: 4,
+    name: "andrew",
+    address: { city: { name: "Bruxelles", zipCode: "" } }
+  }
+];
+
+return sort(users, { sortBy: "address.city.name", sortDir: "DESC" });
+// [
+// { id: 3, name: "mary", address: { city:{ name: "Paris", zipCode: "" } } },
+// { id: 1, name: "luke", address: { city:{ name: "Manchester", zipCode: "" } } },
+// { id: 4, name: "andrew", address: { city:{ name: "Bruxelles", zipCode: "" } } },
+// { id: 2, name: "andrew", address: { city:{ name: "Berlin", zipCode: "" } } },
+// ]
+```
+
+In case of array of arrays, `sortBy` can specify the index of the element the array has to be sort by.
+
+```javascript
+const users = [
+  ["Mark", "Ross", 30, "Student"],
+  ["Paul", "White", 29, "Student"],
+  ["Jessica", "Bishop", 32, "Artist"]
+];
+
+return sort(users, { sortBy: "2", sortDir: "DESC" });
+// [
+// ["Jessica", "Bishop", 32, "Artist"],
+// ["Mark", "Ross", 30, "Student"],
+// ["Paul", "White", 29, "Student"],
+// ]
+```
+
+### throwError
+
+If `throwError` is set to false (default), in case of error `sortilege` fails silently and returns the passed array as is.
+When `throwError` is set to true instead, an Error is thrown.
+Example:
+
+```javascript
+const inconsistentUsers = [
+  { id: 1, name: "luke", age: 32 },
+  { id: 2, age: 40 },
+  { id: 3, name: "mary", age: 43 },
+  { id: 4, name: "andrew", age: 29 }
+];
+
+return sort(inconsistentUsers, {
+  sortBy: "name",
+  sortDir: "DESC",
+  throwError: true
+});
+// Error: "Specified sortBy (name) has not been found on item { id: 2, age: 40 }"
+```
