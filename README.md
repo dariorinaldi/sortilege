@@ -188,7 +188,7 @@ return sort(users, { sortBy: "2", sortDir: "DESC" });
 // ["Paul", "White", 29, "Student"],
 // ]
 ```
-
+---
 #### Multiple fields
 
 It is possible to sort by multiple fields. To accomplish this, you can pass to sortBy an array of fields.
@@ -216,8 +216,6 @@ return sort(users, { sortBy: ["name", "address.city.name"] });
 // { id: 3, name: "mary", address: { city: { name: "Manchester", zipCode: "" } } },
 // ]
 ```
-
----
 
 ### throwError
 
