@@ -1,4 +1,4 @@
-# sortilege
+<img src="sortilege.png" width="60%" />
 
 Sort arrays containing any data type by given field(s)!
 
