@@ -26,7 +26,7 @@ const mixedList = [
   ["luca", "andrea", 0]
 ];
 
-describe("sort-everything - happy path", () => {
+describe("sortilege - happy path", () => {
   it("GIVEN a list of strings WHEN sort is called without options THEN it should sort in ascending order", () => {
     expect(sort(stringList)).toEqual([
       "andrea",
@@ -142,7 +142,7 @@ describe("sort-everything - happy path", () => {
   });
 });
 
-describe("sort-everything - invalid sortBy", () => {
+describe("sortilege - invalid sortBy", () => {
   it("GIVEN a list of arrays WHEN is called with an invalid [sortBy] and [throwError] = false (default) THEN it should return the list as is", () => {
     expect(sort(arrayList, { sortBy: "3" })).toEqual([
       ["luca", "andrea", "marta"],
@@ -164,7 +164,7 @@ describe("sort-everything - invalid sortBy", () => {
   });
 });
 
-describe("sort-everything - invalid items", () => {
+describe("sortilege - invalid items", () => {
   it("GIVEN an object WHEN sort and [throwError] = false THEN it should return value as is", () => {
     expect(sort("non-array")).toBe("non-array");
   });

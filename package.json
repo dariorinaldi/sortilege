@@ -1,12 +1,11 @@
 {
-  "name": "sort-everything",
+  "name": "sortilege",
   "version": "1.0.0",
   "description": "A function to sort (about) everything",
-  "main": "lib/sort-everything.min.js",
+  "main": "lib/sortilege.min.js",
   "scripts": {
     "test": "jest test --watch",
-    "build": "webpack --config webpack.config.js",
-    "build2": "babel --out-dir lib"
+    "build": "webpack --config webpack.config.js"
   },
   "husky": {
     "hooks": {
@@ -16,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dariorinaldi/sort-everything.git"
+    "url": "git+https://github.com/dariorinaldi/sortilege.git"
   },
   "author": "Dario Rinaldi & Emiliano Costanzo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dariorinaldi/sort-everything/issues"
+    "url": "https://github.com/dariorinaldi/sortilege/issues"
   },
-  "homepage": "https://github.com/dariorinaldi/sort-everything#readme",
+  "homepage": "https://github.com/dariorinaldi/sortilege#readme",
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "6.26.0",

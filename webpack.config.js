@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = {
   entry: "./src/index.js",
   output: {
-    filename: "sort-everything.min.js",
+    filename: "sortilege.min.js",
     path: path.resolve(__dirname, "lib"),
     libraryTarget: "commonjs2"
   },
