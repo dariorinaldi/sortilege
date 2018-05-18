@@ -118,7 +118,10 @@ Specifies the field(s) the array is sorted by.
 
 **It must refer to _non-object_ and _non-array_ field. It can have the following formats.**
 
-**Single field**
+---
+
+#### Single field
+
 It finds the field specified inside the object and sort by it.
 
 ```javascript
@@ -154,18 +157,10 @@ Example:
 
 ```javascript
 const users = [
-  {
-    id: 1,
-    name: "luke",
-    address: { city: { name: "Manchester", zipCode: "" } }
-  },
+  { id: 1, name: "luke", address: { city: { name: "Manchester", zipCode: "" } } },
   { id: 2, name: "andrew", address: { city: { name: "Berlin", zipCode: "" } } },
   { id: 3, name: "mary", address: { city: { name: "Paris", zipCode: "" } } },
-  {
-    id: 4,
-    name: "andrew",
-    address: { city: { name: "Bruxelles", zipCode: "" } }
-  }
+  { id: 4, name: "andrew", address: { city: { name: "Bruxelles", zipCode: "" } } }
 ];
 
 return sort(users, { sortBy: "address.city.name", sortDir: "DESC" });
@@ -193,6 +188,36 @@ return sort(users, { sortBy: "2", sortDir: "DESC" });
 // ["Paul", "White", 29, "Student"],
 // ]
 ```
+
+#### Multiple fields
+
+It is possible to sort by multiple fields. To accomplish this, you can pass to sortBy an array of fields.
+The order in the array is important: the leftmost field is the most important in the sort, the rightmost the less important.
+
+```javascript
+sortBy: ["field1", "field2", "field3.subfield"];
+```
+
+Example:
+
+```javascript
+const users = [
+  { id: 1, name: "luke", address: { city: { name: "Paris", zipCode: "" } } },
+  { id: 2, name: "andrew", address: { city: { name: "Bruxelles", zipCode: "" } } },
+  { id: 3, name: "mary", address: { city: { name: "Manchester", zipCode: "" } } },
+  { id: 4, name: "andrew", address: { city: { name: "Berlin", zipCode: "" } } }
+];
+
+return sort(users, { sortBy: ["name", "address.city.name"] });
+// [
+// { id: 4, name: "andrew", address: { city: { name: "Berlin", zipCode: "" } } }
+// { id: 2, name: "andrew", address: { city: { name: "Bruxelles", zipCode: "" } } },
+// { id: 1, name: "luke", address: { city: { name: "Paris", zipCode: "" } } },
+// { id: 3, name: "mary", address: { city: { name: "Manchester", zipCode: "" } } },
+// ]
+```
+
+---
 
 ### throwError
 
