@@ -238,3 +238,7 @@ return sort(inconsistentUsers, {
 });
 // Error: "Specified sortBy (name) has not been found on item { id: 2, age: 40 }"
 ```
+
+## License
+
+MIT © [Dario Rinaldi](https://github.com/dariorinaldi) & [Emiliano Costanzo](https://github.com/Emi-C)
