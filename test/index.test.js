@@ -18,6 +18,20 @@ const objectList = [
   { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } }
 ];
 
+const objectNestedList = [
+  { name: "luke", address: { city: { name: "Paris", zipCode: "21020" } } },
+  {
+    name: "andrew",
+    address: { city: { name: "Bruxelles", zipCode: "20100" } }
+  },
+  { name: "mary", address: { city: { name: "Manchester", zipCode: "34089" } } },
+  { name: "andrew", address: { city: { name: "Berlin", zipCode: "11011" } } },
+  {
+    name: "christopher",
+    address: { city: { name: "Milan", zipCode: "78123" } }
+  }
+];
+
 const mixedList = [
   ["luca", "andrea", "marta"],
   [true, "andrea", "marta"],
@@ -72,8 +86,8 @@ describe("sortilege - happy path", () => {
       ["luca", "andrea", "marta"],
       ["dario", "laura", "federica"],
       ["giovanni", "marco", "fabio"],
-      ["elisa", "marco", "eleonora"],
-      ["flavio", "roberta", "eleonora"]
+      ["flavio", "roberta", "eleonora"],
+      ["elisa", "marco", "eleonora"]
     ]);
   });
 
@@ -92,8 +106,8 @@ describe("sortilege - happy path", () => {
       { user: { name: "paolo", id: 1346, birthDate: "1984-11-10" } },
       { user: { name: "mario", id: 348, birthDate: "1985-04-15" } },
       { user: { name: "luca", id: 9172, birthDate: "1983-05-25" } },
-      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } },
-      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } }
+      { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } },
+      { user: { name: "andrea", id: 1246, birthDate: "1983-05-24" } }
     ]);
   });
 
@@ -140,6 +154,27 @@ describe("sortilege - happy path", () => {
       { user: { name: "andrea", id: 346, birthDate: "1969-02-23" } }
     ]);
   });
+});
+
+it("GIVEN a nested list of items WHEN sort is called with multiple [sortBy] THEN it should sort in ascending order by given fields", () => {
+  expect(
+    sort(objectNestedList, { sortBy: ["name", "address.city.name"] })
+  ).toEqual([
+    { name: "andrew", address: { city: { name: "Berlin", zipCode: "11011" } } },
+    {
+      name: "andrew",
+      address: { city: { name: "Bruxelles", zipCode: "20100" } }
+    },
+    {
+      name: "christopher",
+      address: { city: { name: "Milan", zipCode: "78123" } }
+    },
+    { name: "luke", address: { city: { name: "Paris", zipCode: "21020" } } },
+    {
+      name: "mary",
+      address: { city: { name: "Manchester", zipCode: "34089" } }
+    }
+  ]);
 });
 
 describe("sortilege - invalid sortBy", () => {

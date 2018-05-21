@@ -25,7 +25,7 @@ const asc = (a, b, indexA, indexB) => {
 const desc = (a, b, indexA, indexB) => {
   if (a > b) return -1;
   if (b > a) return 1;
-  return indexB - indexA; //if value is the same, preserves desc order of the original set
+  return indexA - indexB; //if value is the same, preserves desc order of the original set
 };
 
 const getValueByPath = (propertyName, object) => {
@@ -41,6 +41,11 @@ const fallbacksortBy = item => {
     sortBy += `.${fallbacksortBy(item[sortBy])}`;
   }
   return sortBy;
+};
+
+//list is items data with a progressive id to preserve order if value is the same
+const putIndexes = items => {
+  return items.map((data, id) => ({ id: id, data: data }));
 };
 
 const checkForDifferentTypes = (itemA, itemB) => {
@@ -138,26 +143,18 @@ const sort = (items, options) => {
     return items;
   }
 
-  //list is items data with a progressive id to preserve order if value is the same
-  const list = items.map(function(data, id) {
-    return { id: id, data: data };
-  });
-
   let sorted;
   if (!sortBy || !Array.isArray(sortBy)) {
-    sorted = execSort(list, sortDir, sortBy, throwError);
+    sorted = execSort(putIndexes(items), sortDir, sortBy, throwError);
   } else {
     //sorts and gets data of lists in reverse order (priority) of given sortBy array
     sorted = sortBy.reverse().reduce((acc, curr) => {
-      return execSort(acc, sortDir, curr, throwError);
-    }, list);
+      const newList = execSort(acc, sortDir, curr, throwError);
+      return newList ? putIndexes(newList.map(val => val.data)) : acc;
+    }, putIndexes(items));
   }
 
-  return sorted
-    ? sorted.map(function(val) {
-        return val.data;
-      })
-    : items;
+  return sorted ? sorted.map(val => val.data) : items;
 
   return list;
 };
