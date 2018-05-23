@@ -2,9 +2,9 @@
 
 Sort arrays containing any data type by given field(s)!
 
-[![GitHub version](https://badge.fury.io/gh/dariorinaldi%2Fsort-everything.svg)](https://badge.fury.io/gh/dariorinaldi%2Fsort-everything)
+
 [![NPM version](https://badge.fury.io/js/sortilege.svg)](http://badge.fury.io/js/sortilege)
-[![Coverage Status](https://coveralls.io/repos/dariorinaldi/sort-everything/badge.svg)](https://coveralls.io/r/boennemann/badges)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b25fd10bf3b959010821/maintainability)](https://codeclimate.com/github/dariorinaldi/sortilege/maintainability)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
 ## Installation

@@ -5,12 +5,13 @@
   "main": "lib/sortilege.min.js",
   "scripts": {
     "test": "jest test --watch",
+    "test:coverage": "jest test --coverage",
     "build": "webpack --config webpack.config.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
+      "pre-commit": "npm run test:coverage",
+      "pre-push": "npm run test:coverage"
     }
   },
   "repository": {
@@ -22,6 +23,14 @@
   "bugs": {
     "url": "https://github.com/dariorinaldi/sortilege/issues"
   },
+  "keywords":[
+    "sort",
+    "sorting",
+    "array",
+    "recursive sorting",
+    "multiple fields",
+    "no dependencies"
+  ],
   "homepage": "https://github.com/dariorinaldi/sortilege#readme",
   "dependencies": {},
   "devDependencies": {
