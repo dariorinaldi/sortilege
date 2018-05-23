@@ -1,6 +1,6 @@
 {
   "name": "sortilege",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A function to sort (about) everything",
   "main": "lib/sortilege.min.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "bugs": {
     "url": "https://github.com/dariorinaldi/sortilege/issues"
   },
-  "keywords":[
+  "keywords": [
     "sort",
     "sorting",
     "array",
