@@ -1,6 +1,6 @@
 {
   "name": "sortilege",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A function to sort (about) everything",
   "main": "lib/sortilege.min.js",
   "scripts": {
