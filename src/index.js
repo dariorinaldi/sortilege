@@ -61,8 +61,8 @@ const checkForDifferentTypes = (itemA, itemB) => {
 
 const compare = (a, b, sortDir, sortBy, throwError) => {
   //clones parameters for manipulation
-  let itemA = a.data;
-  let itemB = b.data;
+  let itemA = { ...a.data };
+  let itemB = { ...b.data };
   let sortParameter = sortBy;
 
   //if we have different types in the list, error is thrown
