@@ -134,12 +134,11 @@ const calculateSorted = ({ items, sortDir, sortBy, throwError }) => {
  */
 const sort = (items, options) => {
   const { sortDir, sortBy, throwError } = getOptions(options);
-  //check if items is array
+  // Check options conditions
   const isValidOptions = verifyOptions(items, sortBy);
   if (isValidOptions.error) {
     if (throwError) {
       throw new Error(isValidOptions.error);
-      //console.error(isValidOptions.error);
     }
     return items;
   }
