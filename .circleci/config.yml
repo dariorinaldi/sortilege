@@ -1,8 +1,9 @@
 version: 2.0
 jobs:
   build:
-    docker: # run the steps with Docker
-      - image: circleci/node:4.8.2 # ...with this image as the primary container; this is where all `steps` will run
+    docker: 
+      - image: circleci/node:4.8.2
+    parallelism: 2
     steps:
       - checkout
       - restore_cache:
@@ -18,12 +19,9 @@ jobs:
           name: Run tests
           command: npm run test:ci
           environment:
-            JEST_JUNIT_OUTPUT: "reports/test-results.xml"
+            JEST_JUNIT_OUTPUT: "test-results.xml"
       - store_artifacts:
           path: test-results.xml
           prefix: tests
-      - store_artifacts:
-          path: coverage
-          previx: coverage
       - store_test_results:
           path: test-results.xml
