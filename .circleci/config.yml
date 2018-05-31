@@ -8,15 +8,15 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: get-dependencies
+          name: Get dependencies
           command: npm i
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run:
-          name: unit test
-          command: npx jest test --ci --testResultsProcessor="jest-junit"
+          name: Run tests
+          command: npm run test:ci
           environment:
             JEST_JUNIT_OUTPUT: "reports/test-results.xml"
       - store_artifacts:
