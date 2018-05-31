@@ -1,4 +1,6 @@
 import isValidISODate from "./isValidISODate";
+import { verifyOptions } from "./utils";
+
 const DEFAULTS = { sortDir: "ASC", sortBy: null, throwError: false };
 
 const getOptions = options => {
@@ -111,6 +113,17 @@ const execSort = (list, sortDir, sortBy, throwError) => {
   }
 };
 
+const calculateSorted = ({ items, sortDir, sortBy, throwError }) => {
+  if (!sortBy || !Array.isArray(sortBy)) {
+    return execSort(putIndexes(items), sortDir, sortBy, throwError);
+  }
+  // Sorts and gets data of lists in reverse order (priority) of given sortBy array
+  return sortBy.reverse().reduce((acc, curr) => {
+    const newList = execSort(acc, sortDir, curr, throwError);
+    return newList ? putIndexes(newList.map(val => val.data)) : acc;
+  }, putIndexes(items));
+};
+
 /** A function to sort an array in a type-aware mode
  * @param {Array.<any>} items  - Array to sort. The items have to be of the same type
  * @param [{Object}] options - Include options parameters to be used
@@ -121,42 +134,18 @@ const execSort = (list, sortDir, sortBy, throwError) => {
  */
 const sort = (items, options) => {
   const { sortDir, sortBy, throwError } = getOptions(options);
-  //check if items is array
-  if (!Array.isArray(items)) {
+  // Check options conditions
+  const isValidOptions = verifyOptions(items, sortBy);
+  if (isValidOptions.error) {
     if (throwError) {
-      throw new Error(`Items must be an array`);
+      throw new Error(isValidOptions.error);
     }
     return items;
   }
 
-  if (sortBy && Array.isArray(sortBy)) {
-    if (sortBy.some(i => typeof i !== "string")) {
-      if (throwError) {
-        throw new Error("[sortBy] must be a string or an array of strings");
-      }
-      return items;
-    }
-  } else if (sortBy && typeof sortBy !== "string") {
-    if (throwError) {
-      throw new Error("[sortBy] must be a string or an array of strings");
-    }
-    return items;
-  }
-
-  let sorted;
-  if (!sortBy || !Array.isArray(sortBy)) {
-    sorted = execSort(putIndexes(items), sortDir, sortBy, throwError);
-  } else {
-    //sorts and gets data of lists in reverse order (priority) of given sortBy array
-    sorted = sortBy.reverse().reduce((acc, curr) => {
-      const newList = execSort(acc, sortDir, curr, throwError);
-      return newList ? putIndexes(newList.map(val => val.data)) : acc;
-    }, putIndexes(items));
-  }
+  const sorted = calculateSorted({ items, sortDir, sortBy, throwError });
 
   return sorted ? sorted.map(val => val.data) : items;
-
-  return list;
 };
 
 export default sort;
