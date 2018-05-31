@@ -5,7 +5,7 @@
   "main": "lib/sortilege.min.js",
   "scripts": {
     "test": "jest test --watch",
-    "test:ci": "jest test --ci --testResultsProcessor='jest-junit'",
+    "testci": "jest test --ci --testResultsProcessor='jest-junit'",
     "build": "webpack --config webpack.config.js"
   },
   "husky": {
