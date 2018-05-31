@@ -5,6 +5,7 @@ Sort arrays containing any data type by given field(s)!
 
 [![NPM version](https://badge.fury.io/js/sortilege.svg)](http://badge.fury.io/js/sortilege)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b25fd10bf3b959010821/maintainability)](https://codeclimate.com/github/dariorinaldi/sortilege/maintainability)
+[![CircleCI](https://circleci.com/gh/dariorinaldi/sortilege.svg?style=svg)](https://circleci.com/gh/dariorinaldi/sortilege)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 
 ## Installation
